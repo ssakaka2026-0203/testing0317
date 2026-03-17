@@ -1,21 +1,23 @@
 name: Databricks OIDC Connection Test
 
 on:
-  workflow_dispatch: # 手動で実行できるようにします
+  workflow_dispatch:
 
 permissions:
-  id-token: write # OIDCトークンを発行するために必須の設定です
+  id-token: write
   contents: read
+
+# Node.js 24への強制移行（警告対策）
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   test-connection:
     runs-on: ubuntu-latest
-    environment: test # 先ほど作成した環境名を指定します
+    environment: test
     
     env:
-      # DatabricksのワークスペースURL 
       DATABRICKS_HOST: https://dbc-0b85a8d6-66ff.cloud.databricks.com
-      # 先ほど作成したサービスプリンシパルのID (Application ID)
       DATABRICKS_CLIENT_ID: "75966015710072"
       DATABRICKS_AUTH_TYPE: github-oidc
 
@@ -23,11 +25,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install Databricks CLI
-        run: |
-          curl -fsSL https://raw.githubusercontent.com/databricks/setup-databricks-cli/main/install.sh | sh
+      # 修正：手動スクリプトをやめて、公式のインストールアクションを使う
+      - name: Setup Databricks CLI
+        uses: databricks/setup-databricks-cli@v1
 
       - name: Check Connection
         run: |
-          # ログインに成功すれば、ワークスペース内のフォルダ一覧が表示されます
           databricks workspace list /Workspace/Repos
