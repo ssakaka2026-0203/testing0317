@@ -16,7 +16,8 @@ jobs:
     environment: test
     
     env:
-      DATABRICKS_HOST: https://dbc-74746540-7869.cloud.databricks.com
+      # 【重要】ブラウザからコピーした正しいURLに書き換えてください
+      DATABRICKS_HOST: https://dbc-e04d75a2-cdf2.cloud.databricks.com
       DATABRICKS_CLIENT_ID: "96012af9-817d-4867-a2f0-e4d7da458b3a"
       DATABRICKS_AUTH_TYPE: github-oidc
 
@@ -29,5 +30,5 @@ jobs:
 
       - name: Search Correct Repo Path
         run: |
-          # ログインできているSPが「見ることができる」リポジトリを一覧表示します
+          # 正しいURLであれば、ここでリポジトリの一覧が表示されます
           databricks repos list
