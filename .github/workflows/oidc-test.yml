@@ -1,4 +1,4 @@
-name: Databricks OIDC Deployment Test
+name: Databricks OIDC Deployment Final
 
 on:
   workflow_dispatch:
@@ -16,7 +16,6 @@ jobs:
     environment: test
     
     env:
-      # 【重要】ブラウザからコピーした正しいURLに書き換えてください
       DATABRICKS_HOST: https://dbc-e04d75a2-cdf2.cloud.databricks.com
       DATABRICKS_CLIENT_ID: "96012af9-817d-4867-a2f0-e4d7da458b3a"
       DATABRICKS_AUTH_TYPE: github-oidc
@@ -28,7 +27,7 @@ jobs:
       - name: Setup Databricks CLI
         uses: databricks/setup-cli@main
 
-      - name: Search Correct Repo Path
+      - name: Update Databricks Repo
         run: |
-          # 正しいURLであれば、ここでリポジトリの一覧が表示されます
-          databricks repos list
+          # 指定されたパスで最新化を実行
+          databricks repos update "/Workspace/Repos/testing0317" --branch main
