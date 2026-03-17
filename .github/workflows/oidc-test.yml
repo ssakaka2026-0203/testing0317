@@ -1,0 +1,33 @@
+name: Databricks OIDC Connection Test
+
+on:
+  workflow_dispatch: # 手動で実行できるようにします
+
+permissions:
+  id-token: write # OIDCトークンを発行するために必須の設定です
+  contents: read
+
+jobs:
+  test-connection:
+    runs-on: ubuntu-latest
+    environment: test # 先ほど作成した環境名を指定します
+    
+    env:
+      # DatabricksのワークスペースURL 
+      DATABRICKS_HOST: https://dbc-0b85a8d6-66ff.cloud.databricks.com
+      # 先ほど作成したサービスプリンシパルのID (Application ID)
+      DATABRICKS_CLIENT_ID: "75966015710072"
+      DATABRICKS_AUTH_TYPE: github-oidc
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Databricks CLI
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/databricks/setup-databricks-cli/main/install.sh | sh
+
+      - name: Check Connection
+        run: |
+          # ログインに成功すれば、ワークスペース内のフォルダ一覧が表示されます
+          databricks workspace list /Workspace/Repos
