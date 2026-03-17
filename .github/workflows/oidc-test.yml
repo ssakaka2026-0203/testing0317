@@ -30,4 +30,4 @@ jobs:
       - name: Update Databricks Repo
         run: |
           # 指定されたパスで最新化を実行
-          databricks repos update "/Workspace/Repos/testing0317" --branch main
+          databricks repos update "/Workspace/Users/y-sakamaki@knowledgecommunication.jp/testing0317" --branch main
