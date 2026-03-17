@@ -1,4 +1,4 @@
-name: Databricks OIDC Connection Test
+name: Databricks OIDC Deployment Test
 
 on:
   workflow_dispatch:
@@ -11,13 +11,12 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
-  test-connection:
+  deploy:
     runs-on: ubuntu-latest
     environment: test
     
     env:
       DATABRICKS_HOST: https://dbc-e04d75a2-cdf2.cloud.databricks.com/browse/folders/repos?o=7474654078694076
-      # 修正：14桁の数字ではなく、UUID（Application ID）を使用します
       DATABRICKS_CLIENT_ID: "96012af9-817d-4867-a2f0-e4d7da458b3a"
       DATABRICKS_AUTH_TYPE: github-oidc
 
@@ -28,6 +27,8 @@ jobs:
       - name: Setup Databricks CLI
         uses: databricks/setup-cli@main
 
-      - name: Check Connection
+      - name: Update Databricks Repo
         run: |
-          databricks workspace list /Workspace/Repos
+          # あなたのユーザーフォルダ配下のtesting0317を更新
+          # パスは Databricks UI の [Repos] > [あなたのフォルダ] > [testing0317] で右クリック→[Copy path]で取得できます
+          databricks repos update /Workspace/Repos/ssakaka2026-0203@example.com/testing0317 --branch main
