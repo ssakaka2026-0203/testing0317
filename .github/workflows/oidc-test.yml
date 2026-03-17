@@ -16,7 +16,7 @@ jobs:
     environment: test
     
     env:
-      DATABRICKS_HOST: https://dbc-0b85a8d6-66ff.cloud.databricks.com
+      DATABRICKS_HOST: https://dbc-e04d75a2-cdf2.cloud.databricks.com/browse/folders/repos?o=7474654078694076
       # 修正：14桁の数字ではなく、UUID（Application ID）を使用します
       DATABRICKS_CLIENT_ID: "96012af9-817d-4867-a2f0-e4d7da458b3a"
       DATABRICKS_AUTH_TYPE: github-oidc
