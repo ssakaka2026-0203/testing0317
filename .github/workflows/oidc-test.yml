@@ -7,7 +7,6 @@ permissions:
   id-token: write
   contents: read
 
-# Node.js 24への対応
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -18,18 +17,17 @@ jobs:
     
     env:
       DATABRICKS_HOST: https://dbc-0b85a8d6-66ff.cloud.databricks.com
-      DATABRICKS_CLIENT_ID: "75966015710072"
+      # 修正：14桁の数字ではなく、UUID（Application ID）を使用します
+      DATABRICKS_CLIENT_ID: "96012af9-817d-4867-a2f0-e4d7da458b3a"
       DATABRICKS_AUTH_TYPE: github-oidc
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 正しい公式アクション名に修正
       - name: Setup Databricks CLI
         uses: databricks/setup-cli@main
 
       - name: Check Connection
         run: |
-          # 接続テスト：フォルダ一覧が表示されれば成功
           databricks workspace list /Workspace/Repos
