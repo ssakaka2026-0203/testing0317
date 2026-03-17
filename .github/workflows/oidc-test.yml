@@ -7,7 +7,7 @@ permissions:
   id-token: write
   contents: read
 
-# Node.js 24への強制移行（警告対策）
+# Node.js 24への対応
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -25,10 +25,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 修正：手動スクリプトをやめて、公式のインストールアクションを使う
+      # 正しい公式アクション名に修正
       - name: Setup Databricks CLI
-        uses: databricks/setup-databricks-cli@v1
+        uses: databricks/setup-cli@main
 
       - name: Check Connection
         run: |
+          # 接続テスト：フォルダ一覧が表示されれば成功
           databricks workspace list /Workspace/Repos
