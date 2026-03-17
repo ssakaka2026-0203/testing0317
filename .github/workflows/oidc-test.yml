@@ -16,7 +16,7 @@ jobs:
     environment: test
     
     env:
-      DATABRICKS_HOST: https://dbc-e04d75a2-cdf2.cloud.databricks.com/browse/folders/repos?o=7474654078694076
+      DATABRICKS_HOST: https://dbc-74746540-7869.cloud.databricks.com
       DATABRICKS_CLIENT_ID: "96012af9-817d-4867-a2f0-e4d7da458b3a"
       DATABRICKS_AUTH_TYPE: github-oidc
 
@@ -29,6 +29,5 @@ jobs:
 
       - name: Update Databricks Repo
         run: |
-          # あなたのユーザーフォルダ配下のtesting0317を更新
-          # パスは Databricks UI の [Repos] > [あなたのフォルダ] > [testing0317] で右クリック→[Copy path]で取得できます
-          databricks repos update /Workspace/Repos/ssakaka2026-0203@example.com/testing0317 --branch main
+          
+          databricks repos update /Workspace/Repos/testing0317 --branch main
