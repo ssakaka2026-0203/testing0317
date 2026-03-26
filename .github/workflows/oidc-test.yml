@@ -1,33 +1,21 @@
-name: Databricks OIDC Deployment Final
-
-on:
-  workflow_dispatch:
+name: OIDC Deploy Test (Dev)
+on: workflow_dispatch
 
 permissions:
   id-token: write
   contents: read
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 jobs:
-  deploy:
+  test-oidc:
     runs-on: ubuntu-latest
     environment: test
-    
     env:
-      DATABRICKS_HOST: https://dbc-e04d75a2-cdf2.cloud.databricks.com
-      DATABRICKS_CLIENT_ID: "96012af9-817d-4867-a2f0-e4d7da458b3a"
       DATABRICKS_AUTH_TYPE: github-oidc
+      DATABRICKS_HOST: https://dbc-0b85a8d6-66ff.cloud.databricks.com
+      DATABRICKS_CLIENT_ID: d213db9e-8780-4fd5-a205-a1db0b5a86f3
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Databricks CLI
-        uses: databricks/setup-cli@main
-
-      - name: Update Databricks Repo
-        run: |
-          # 指定されたパスで最新化を実行
-          databricks repos update "/Workspace/Users/y-sakamaki@knowledgecommunication.jp/testing0317" --branch main
+      - uses: actions/checkout@v4
+      - uses: databricks/setup-cli@main
+      - name: Verify OIDC connection
+        run: databricks current-user me
