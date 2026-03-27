@@ -13,9 +13,14 @@ jobs:
       DATABRICKS_AUTH_TYPE: github-oidc
       DATABRICKS_HOST: https://dbc-0b85a8d6-66ff.cloud.databricks.com
       DATABRICKS_CLIENT_ID: d213db9e-8780-4fd5-a205-a1db0b5a86f3
-
     steps:
       - uses: actions/checkout@v4
       - uses: databricks/setup-cli@main
+
+      # テスト①: OIDC疎通確認（通過済み）
       - name: Verify OIDC connection
         run: databricks current-user me
+
+      # テスト③: クローンジョブ実行
+      - name: Trigger cloned job
+        run: databricks jobs run-now 870105135431146
