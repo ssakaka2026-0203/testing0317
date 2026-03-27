@@ -17,10 +17,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: databricks/setup-cli@main
 
-      # テスト①: OIDC疎通確認（通過済み）
       - name: Verify OIDC connection
         run: databricks current-user me
 
-      # テスト③: クローンジョブ実行
       - name: Trigger cloned job
-        run: databricks jobs run-now 870105135431146
+        run: databricks jobs run-now --no-wait 870105135431146
