@@ -1,0 +1,61 @@
+name: Databricks OIDC Push​
+
+​
+
+on:​
+
+workflow_dispatch: # 検証時: 手動実行​
+
+push: # 本番運用: ブランチpush​
+
+branches:​
+
+- master # → prod 環境フォルダ更新​
+
+- release # → stg 環境フォルダ更新​
+
+- develop # → dev 環境フォルダ更新​
+
+​
+
+permissions:​
+
+id-token: write # OIDCトークン発行に必須​
+
+contents: read​
+
+​
+
+jobs:​
+
+deploy:​
+
+runs-on: ubuntu-latest​
+
+environment: <Environment名> # SP側ポリシーと一致​
+
+env:​
+
+DATABRICKS_HOST: <ワークスペースURL>​
+
+DATABRICKS_CLIENT_ID: <SPのClient ID>​
+
+DATABRICKS_AUTH_TYPE: github-oidc # 固定値​
+
+steps:​
+
+- uses: actions/checkout@v4​
+
+- uses: databricks/setup-cli@main​
+
+- name: Push to Databricks Workspace​
+
+run: |​
+
+databricks workspace import-dir \​
+
+./pipeline \​
+
+/Workspace/<対象パス>/pipeline \​
+
+--overwrite
