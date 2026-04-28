@@ -1,61 +1,71 @@
-name: Databricks OIDC Push​
+name: Databricks OIDC Push
 
-​
+on:
+  workflow_dispatch:        # 検証時: 手動実行
+  push:                     # 本番運用: ブランチpush
+    branches:
+      - master              # → prod 環境フォルダ更新
+      - release             # → stg 環境フォルダ更新
+      - develop             # → dev 環境フォルダ更新
 
-on:​
+permissions:
+  id-token: write           # OIDCトークン発行に必須
+  contents: read
 
-workflow_dispatch: # 検証時: 手動実行​
+jobs:
+  # ========== 本番環境(master) ==========
+  deploy-prod:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    environment: prod       # Databricks側SPのフェデレーションポリシーと一致
+    env:
+      DATABRICKS_HOST: https://<prod-workspace-url>
+      DATABRICKS_CLIENT_ID: <prod-SP-Client-ID>
+      DATABRICKS_AUTH_TYPE: github-oidc
+    steps:
+      - uses: actions/checkout@v4
+      - uses: databricks/setup-cli@main
+      - name: Push to Databricks Workspace (prod)
+        run: |
+          databricks workspace import-dir \
+            ./pipeline \
+            /Workspace/prod/pipeline \
+            --overwrite
 
-push: # 本番運用: ブランチpush​
+  # ========== ステージング環境(release) ==========
+  deploy-stg:
+    if: github.ref == 'refs/heads/release'
+    runs-on: ubuntu-latest
+    environment: stg
+    env:
+      DATABRICKS_HOST: https://<stg-workspace-url>
+      DATABRICKS_CLIENT_ID: <stg-SP-Client-ID>
+      DATABRICKS_AUTH_TYPE: github-oidc
+    steps:
+      - uses: actions/checkout@v4
+      - uses: databricks/setup-cli@main
+      - name: Push to Databricks Workspace (stg)
+        run: |
+          databricks workspace import-dir \
+            ./pipeline \
+            /Workspace/stg/pipeline \
+            --overwrite
 
-branches:​
-
-- master # → prod 環境フォルダ更新​
-
-- release # → stg 環境フォルダ更新​
-
-- develop # → dev 環境フォルダ更新​
-
-​
-
-permissions:​
-
-id-token: write # OIDCトークン発行に必須​
-
-contents: read​
-
-​
-
-jobs:​
-
-deploy:​
-
-runs-on: ubuntu-latest​
-
-environment: <Environment名> # SP側ポリシーと一致​
-
-env:​
-
-DATABRICKS_HOST: <ワークスペースURL>​
-
-DATABRICKS_CLIENT_ID: <SPのClient ID>​
-
-DATABRICKS_AUTH_TYPE: github-oidc # 固定値​
-
-steps:​
-
-- uses: actions/checkout@v4​
-
-- uses: databricks/setup-cli@main​
-
-- name: Push to Databricks Workspace​
-
-run: |​
-
-databricks workspace import-dir \​
-
-./pipeline \​
-
-/Workspace/<対象パス>/pipeline \​
-
---overwrite
+  # ========== 開発環境(develop) ==========
+  deploy-dev:
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    environment: dev
+    env:
+      DATABRICKS_HOST: https://<dev-workspace-url>
+      DATABRICKS_CLIENT_ID: <dev-SP-Client-ID>
+      DATABRICKS_AUTH_TYPE: github-oidc
+    steps:
+      - uses: actions/checkout@v4
+      - uses: databricks/setup-cli@main
+      - name: Push to Databricks Workspace (dev)
+        run: |
+          databricks workspace import-dir \
+            ./pipeline \
+            /Workspace/dev/pipeline \
+            --overwrite
